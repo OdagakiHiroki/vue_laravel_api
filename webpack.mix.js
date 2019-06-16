@@ -11,7 +11,12 @@ const mix = require('laravel-mix');
  |
  */
 
-mix.browserSync('127.0.0.1')
+mix.browserSync({
+        proxy: {
+            target: "http://127.0.0.1:8000"
+        },
+        open: false, //BrowserSync起動時にブラウザを開かない
+    })
     .js('resources/js/app.js', 'public/js')
     .sass('resources/sass/app.scss', 'public/css')
     .version();

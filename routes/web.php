@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
+// すべてのURLでindexテンプレートを返す
+Route::get('/{any?}', function () { //{any?}で任意のパスパラメータanyを受け取る（?があるためなくても良い）
+    return view('index');
+})->where('any', '.+'); //whereメソッドの正規表現でanyに正規表現の.+（任意の文字が1文字以上=なんでもいい）を指定
