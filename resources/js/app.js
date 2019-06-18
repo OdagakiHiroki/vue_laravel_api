@@ -8,6 +8,10 @@ require('./bootstrap');
 
 // window.Vue = require('vue');
 import Vue from 'vue';
+// ルーティングの定義をインポートする
+import router from './router';
+// ルートコンポーネントをインポートする
+import App from './App.vue';
 
 /**
  * The following block of code may be used to automatically register your
@@ -33,5 +37,7 @@ import Vue from 'vue';
 // });
 new Vue({
     el: '#app',
-    template: '<h1>Hello world</h1>'
+    router, // ルーティング定義を読み込む
+    components: { App }, // ルートコンポーネントの使用を宣言
+    template: '<App />' // ルートコンポーネントをtemplateとして適応
 });
