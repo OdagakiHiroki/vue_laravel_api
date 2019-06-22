@@ -37,10 +37,17 @@ import App from './App.vue';
 // const app = new Vue({
 //     el: '#app',
 // });
-new Vue({
+const createApp = async () => {
+  // 認証ユーザーのチェック
+  await store.dispatch('auth/currentUser');
+  // 認証ユーザーのチェックが終わってから、Vueインスタンスを生成
+  new Vue({
     el: '#app',
     router, // ルーティング定義を読み込む
     store, //ストアを読み込む
     components: { App }, // ルートコンポーネントの使用を宣言
     template: '<App />' // ルートコンポーネントをtemplateとして適応
-});
+  });
+};
+
+createApp();

@@ -24,4 +24,10 @@ Route::post('/register', 'Auth\RegisterController@register')->name('register');
 Route::post('/login', 'Auth\LoginController@login')->name('login');
 
 // ログアウト
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
+
+// 認証されたログインユーザーを返却
+Route::get('/user', function(){
+  // ログインユーザーを返却（ログインしていない場合は空文字が返る）
+  return Auth::user();
+})->name('user');
