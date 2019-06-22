@@ -4,7 +4,10 @@ const state = {
   user: null // ログイン済みユーザーを保持する
 };
 
-const getters = {};
+const getters = {
+  check: state => !! state.user,
+  username: state => state.user ? state.user.name : ''
+};
 
 const mutations = {
   // userステートの値を更新する（第一引数は必ずステート）
