@@ -32,6 +32,7 @@ class LoginApiTest extends TestCase
             ->assertStatus(200)
             ->assertJson(['name' => $this->user->name]);
 
+        // 指定したユーザーが認証されていることをアサート（宣言）
         $this->assertAuthenticatedAs($this->user);
     }
 
