@@ -39,7 +39,7 @@ class LoginController extends Controller
     }
 
     /**
-     * ログイン認証
+     * ログイン認証の内部メソッドオーバーライド
      *
      * @param Request $request
      * @param [type] $user
@@ -47,5 +47,18 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user){
         return $user;
+    }
+
+    /**
+     * ログアウト認証の内部メソッドオーバーライド
+     *
+     * @param Request $request
+     * @return void
+     */
+    protected function loggedOut(Request $request){
+        // セッションを再生成する
+        $request->session()->regenerate();
+        // レスポンスをJSONで返す
+        return response()->json();
     }
 }
