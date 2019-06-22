@@ -25,7 +25,7 @@ class LoginApiTest extends TestCase
         // 第3引数の配列をJSON形式に変化し、第2引数で示されるエンドポイントにPOSTした結果を$responseに格納
         $response = $this->json('POST', route('login'), [
             'email' => $this->user->email,
-            'password' => 'password', //secretではない
+            'password' => 'password', //secretではない(database/factories/UserFactory.php参照)
         ]);
 
         $response
