@@ -1,10 +1,11 @@
-import { OK } from '../util';
+import { OK, UNPROCESSABLE_ENTITY } from '../util';
 
 import axios from "axios";
 
 const state = {
   user: null, // ログイン済みユーザーを保持する
-  apiStatus: null //API呼び出しが成功したか否かを表す
+  apiStatus: null, //API呼び出しが成功したか否かを表す
+  loginErrorMessages: null // エラーメッセージを入れるステート
 };
 
 const getters = {
@@ -17,8 +18,13 @@ const mutations = {
   setUser(state, user){
     state.user = user;
   },
+  // API通信が成功したか、失敗したかをセットする
   setApiStatus(state, status){
     state.apiStatus = status;
+  },
+  // ログインのバリデーションエラーメッセージをセットする
+  setLoginErrorMessages(state, messages){
+    state.loginErrorMessages = messages;
   }
 };
 
@@ -41,9 +47,14 @@ const actions = {
     }
     // レスポンスでエラーだった場合
     context.commit('setApiStatus', false);
-    // 通信に失敗したとき、errorモジュールのsetCodeミューテーションをcommitする
-    // ストアモジュールから別のモジュールのミューテーションをcommitする場合は、第三引数に{root:true}が必要
-    context.commit('error/setCode', response.status, {root: true});
+    if(response.status === UNPROCESSABLE_ENTITY){
+      // バリデーションエラーだった場合
+      context.commit('setLoginErrorMessages', response.data.errors);
+    }else{
+      // 通信に失敗したとき、errorモジュールのsetCodeミューテーションをcommitする
+      // ストアモジュールから別のモジュールのミューテーションをcommitする場合は、第三引数に{root:true}が必要
+      context.commit('error/setCode', response.status, {root: true});
+    }
   },
   async logout(context, data){
     const response = await axios.post('/api/logout', data);
