@@ -37,21 +37,30 @@
       </form>
     </div>
     <div class="panel" v-show="tab === 2">
-      <div class="panel" v-show="tab === 2">
-        <form class="form" @submit.prevent="register">
-          <label for="username">Name</label>
-          <input type="text" class="form__item" id="username" v-model="registerForm.name">
-          <label for="email">Email</label>
-          <input type="text" class="form__item" id="email" v-model="registerForm.email">
-          <label for="password">Password</label>
-          <input type="password" class="form__item" id="password" v-model="registerForm.password">
-          <label for="password-confirmation">Password（confirm）</label>
-          <input type="password" class="form__item" id="password-confirmation" v-model="registerForm.password_confirmation">
-          <div class="form__button">
-            <button type="submit" class="button button--inverse">register</button>
-          </div>
-        </form>
-      </div>
+      <form class="form" @submit.prevent="register">
+        <div class="errors" v-if="registerErrors">
+          <ul v-if="registerErrors.name">
+            <li v-for="msg in registerErrors.name" :key="msg">{{ msg }}</li>
+          </ul>
+          <ul v-if="registerErrors.email">
+            <li v-for="msg in registerErrors.email" :key="msg">{{ msg }}</li>
+          </ul>
+          <ul v-if="registerErrors.password">
+            <li v-for="msg in registerErrors.password" :key="msg">{{ msg }}</li>
+          </ul>
+        </div>
+        <label for="username">Name</label>
+        <input type="text" class="form__item" id="username" v-model="registerForm.name">
+        <label for="email">Email</label>
+        <input type="text" class="form__item" id="email" v-model="registerForm.email">
+        <label for="password">Password</label>
+        <input type="password" class="form__item" id="password" v-model="registerForm.password">
+        <label for="password-confirmation">Password（confirm）</label>
+        <input type="password" class="form__item" id="password-confirmation" v-model="registerForm.password_confirmation">
+        <div class="form__button">
+          <button type="submit" class="button button--inverse">register</button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
@@ -86,7 +95,8 @@ export default {
     // 上記記述をVuexのmapStateで書き換え
     ...mapState({
       apiStatus: state => state.auth.apiStatus,
-      loginErrors: state => state.auth.loginErrorMessages
+      loginErrors: state => state.auth.loginErrorMessages,
+      registerErrors: state => state.auth.registerErrorMessages
     })
   },
   methods: {
@@ -101,11 +111,14 @@ export default {
     async register(){
       // authストアのregisterアクションを呼び出す
       await this.$store.dispatch('auth/register', this.registerForm);
-      // トップページへ移動する
-      this.$router.push('/');
+      if(this.apiStatus){
+        // トップページへ移動する
+        this.$router.push('/');
+      }
     },
     clearError(){
       this.$store.commit('auth/setLoginErrorMessages', null);
+      this.$store.commit('auth/setRegisterErrorMessages', null);
     }
   },
   created(){
